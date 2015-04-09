@@ -79,6 +79,8 @@ namespace InventoryManagement.Controllers
                 try
                 {
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password, new { ClientId = model.ClientId});
+                    //Roles.AddUserToRole(model.UserName,"Edit");
+                    //string[] temp = Roles.GetAllRoles();
                     WebSecurity.Login(model.UserName, model.Password);
                     //return RedirectToAction("Index", "Home");
                     return RedirectToAction("Index", "Inventory");

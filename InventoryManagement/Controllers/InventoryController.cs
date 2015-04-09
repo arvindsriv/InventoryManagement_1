@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using InventoryManagement.SP_Test;
 
 namespace InventoryManagement.Controllers
 {
@@ -27,6 +28,15 @@ namespace InventoryManagement.Controllers
             int pageIndex = 1;
             pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
 
+            // Code for testing SP
+            // create input parameters object
+            var test1parms = new testone() { inparm = "abcd" };
+            // call the stored proc
+            var test1results = _db.test.CallStoredProc(test1parms);
+            // get our results into a usable object
+            List<TestOneResultSet> results = test1results.ToList<TestOneResultSet>();
+
+
             ViewBag.CurrentSort = sortOrder;
 
             sortOrder = String.IsNullOrEmpty(sortOrder) ? "Id" : sortOrder;
@@ -35,14 +45,15 @@ namespace InventoryManagement.Controllers
 
             var username = User.Identity.Name;
             var user = _db.UserProfiles.SingleOrDefault(u => u.UserName.ToLower() == username);
-            var clientId = user.ClientId;
+            //var clientId = user.ClientId;
+            var clientId = 1;
 
             switch (sortOrder)
             {
                 case "Id":
                     if (sortOrder.Equals(CurrentSort))
                         products = _db.Products.OrderByDescending
-                                (m => m.Id).Where(m=>m.ClientId == clientId).ToPagedList(pageIndex, pageSize);
+                                (m => m.Id).Where(m => m.ClientId == clientId).ToPagedList(pageIndex, pageSize);
                                 //(m => m.Id).ToPagedList(pageIndex, pageSize);
                     else
                         products = _db.Products.OrderBy
